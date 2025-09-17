@@ -1,0 +1,83 @@
+﻿@{
+    ViewData["Title"] = "Upload CSV";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h3>
+                    <i class="fas fa-upload me-2"></i>Upload CSV File
+                </h3>
+            </div>
+            <div class="card-body">
+                @if (ViewBag.Errors != null && ((List<string>)ViewBag.Errors).Any())
+                {
+                    <div class="alert alert-danger">
+                        <h5><i class="fas fa-exclamation-triangle me-2"></i>Validation Errors</h5>
+                        <ul class="mb-0">
+                            @foreach (var error in (List<string>)ViewBag.Errors)
+                            {
+                                <li>@error</li>
+                            }
+                        </ul>
+                        @if (ViewBag.PartialSuccess == true)
+                        {
+                            <hr>
+                            <p class="mb-0">
+                                <strong>@ViewBag.ParsedCount valid contacts were found and will be imported.</strong>
+                            </p>
+                        }
+                    </div>
+                }
+
+                @if (ViewBag.ImportedCount != null)
+                {
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle me-2"></i>
+                        Successfully imported @ViewBag.ImportedCount contacts!
+                        <a asp-action="Index" class="btn btn-sm btn-success ms-2">View Contacts</a>
+                    </div>
+                }
+
+                <div class="alert alert-info">
+                    <h5><i class="fas fa-info-circle me-2"></i>CSV Format Requirements</h5>
+                    <p>Your CSV file should contain the following columns in this exact order:</p>
+                    <ol>
+                        <li><strong>Name</strong> - Full name (max 50 characters)</li>
+                        <li><strong>Date of Birth</strong> - Format: YYYY-MM-DD, MM/dd/yyyy, or dd/MM/yyyy</li>
+                        <li><strong>Married</strong> - true/false, yes/no, 1/0, married/single</li>
+                        <li><strong>Phone</strong> - Phone number (international format recommended)</li>
+                        <li><strong>Salary</strong> - Decimal number (must be greater than 0)</li>
+                    </ol>
+                    <p class="mb-0">
+                        <strong>Example:</strong><br>
+                        <code>John Doe,1990-05-15,true,+1-555-0123,75000.00</code>
+                    </p>
+                </div>
+
+                <form asp-action="Upload" method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                    <div class="mb-4">
+                        <label for="csvFile" class="form-label">Select CSV File</label>
+                        <input type="file" class="form-control" id="csvFile" name="csvFile" accept=".csv" required>
+                        <div class="form-text">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Only CSV files are accepted. Maximum file size: 10MB
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a asp-action="Index" class="btn btn-secondary me-md-2">
+                            <i class="fas fa-arrow-left me-1"></i>Back to List
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-upload me-1"></i>Upload & Import
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
